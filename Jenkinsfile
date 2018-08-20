@@ -10,8 +10,8 @@ pipeline {
 			}
         	}
                 stage('SonarQube analysis') { 
-                        steps {
                                 withSonarQubeEnv('Sonar') { 
+                                        steps {
                                         sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
                                         '-f pom.xml ' +
                                         '-Dsonar.projectKey=com.petclinic:all:master ' +
@@ -22,6 +22,7 @@ pipeline {
                                         '-Dsonar.tests=. ' +
                                         '-Dsonar.test.inclusions=**/*Test*/** ' +
                                         '-Dsonar.exclusions=**/*Test*/**'
+                                        }
                                 }
                         }
                 }
