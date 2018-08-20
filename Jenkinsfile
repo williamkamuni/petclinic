@@ -6,24 +6,18 @@ pipeline {
 	stages {
         	stage('compile, test and package') {
         		steps {
-			dir(project_path) {
             			sh 'mvn clean package'
 			}
-            	}
         	}
         	stage('archival') {
         		steps {
-			dir(project_path) {
             	 		archiveArtifacts 'target/*.jar'
             		}
-		}
         	}
         	stage('unit test') {
         		steps {
-			dir(project_path) {
 		            	junit 'target/surefire-reports/*.xml'
             		}
-		}
         	}
 	}
 	post { 
