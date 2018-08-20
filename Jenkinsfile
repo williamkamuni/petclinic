@@ -11,7 +11,7 @@ pipeline {
         	}
         	stage('archival') {
         		steps {
-            	 		archiveArtifacts 'target/*.jar'
+            	 		archiveArtifacts 'target/*.?ar'
             		}
         	}
         	stage('unit test') {
