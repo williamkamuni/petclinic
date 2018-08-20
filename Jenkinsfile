@@ -1,16 +1,14 @@
 pipeline {
 	agent any
-	environment {
-		qg = waitForQualityGate()
-	}
 	stages {
         	stage('compile, test and package') {
         		steps {
             			sh 'mvn clean package'
 			}
         	}
-                stage('SonarQube analysis') { 
-                                withSonarQubeEnv('Sonar') { 
+            /*    stage('SonarQube analysis') { 
+                        steps {
+                                withSonarQubeEnv('Sonar') {
                                         steps {
                                         sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
                                         '-f pom.xml ' +
@@ -20,24 +18,24 @@ pipeline {
                                         '-Dsonar.language=java ' +
                                         '-Dsonar.sources=. ' +
                                         '-Dsonar.tests=. ' +
-                                        '-Dsonar.test.inclusions=**/*Test*/** ' +
-                                        '-Dsonar.exclusions=**/*Test*/**'
+                            //            '-Dsonar.test.inclusions=**/*Test*/** ' +
+                            //            '-Dsonar.exclusions=**/*Test*/**'
                                         }
                                 }
                         }
                 }
                 stage("SonarQube Quality Gate") { 
                         steps {
-                                timeout(time: 1, unit: 'HOURS') { 
-                                        //def qg = waitForQualityGate() 
+                                timeout(time: 1, unit: 'HOURS') {  
                                         script {
+                                                def qg = waitForQualityGate()
                                                 if (qg.status != 'OK') {
                                                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
                                                 }
                                         }
                                 }
                         }
-                }
+                } */
         	stage('archival') {
         		steps {
             	 		archiveArtifacts 'target/*.?ar'
