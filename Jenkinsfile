@@ -6,7 +6,7 @@ pipeline {
             			sh 'mvn clean package'
 			}
         	}
-            /*    stage('SonarQube analysis') { 
+               stage('SonarQube analysis') { 
                         steps {
                                 withSonarQubeEnv('Sonar') {
                                         steps {
@@ -22,7 +22,7 @@ pipeline {
                                 }
                         }
                 }
-                stage("SonarQube Quality Gate") { 
+            /*    stage("SonarQube Quality Gate") { 
                         steps {
                                 timeout(time: 1, unit: 'HOURS') {  
                                         script {
