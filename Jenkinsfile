@@ -9,7 +9,7 @@ pipeline {
                stage('SonarQube analysis') { 
                         steps {
                                 withSonarQubeEnv('Sonar') {
-                                        steps {
+                                        script {
                                         sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
                                         '-f pom.xml ' +
                                         '-Dsonar.projectKey=com.petclinic:all:master ' +
@@ -22,8 +22,9 @@ pipeline {
                                 }
                         }
                 }
-            /*    stage("SonarQube Quality Gate") { 
+               stage("SonarQube Quality Gate") { 
                         steps {
+                                sleep 20
                                 timeout(time: 1, unit: 'HOURS') {  
                                         script {
                                                 def qg = waitForQualityGate()
@@ -33,7 +34,7 @@ pipeline {
                                         }
                                 }
                         }
-                } */
+                } 
         	stage('archival') {
         		steps {
             	 		archiveArtifacts 'target/*.?ar'
