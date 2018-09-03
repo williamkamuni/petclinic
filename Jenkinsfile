@@ -20,13 +20,14 @@ pipeline {
                                         '-Dsonar.tests=. ' +
                                         '-Dsonar.test.inclusions=**/*Test*/** ' +
                                         '-Dsonar.exclusions=**/*Test*/** '
-                                        }
-                                }
-                                sleep 10
-                                timeout(time: 1, unit: 'HOURS') {  
-                                def qg = waitForQualityGate()
-                                        if (qg.status != 'OK') {
-                                                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                                        
+                                        sleep 10
+                                                timeout(time: 1, unit: 'HOURS') {  
+                                                def qg = waitForQualityGate()
+                                                        if (qg.status != 'OK') {
+                                                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                                                        }
+                                                }
                                         }
                                 }
                         }
