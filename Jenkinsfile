@@ -1,78 +1,61 @@
 pipeline {
 	agent any
+	tools {
+        maven 'm3' 
+    }
 	stages {
-        	stage('compile, test and package') {
-        		steps {
-            			sh 'mvn clean package'
+    		stage('checkout') {
+			input {
+      	message "Should we continue?"
+        ok "Yes, we should."
+        parameters {
+        	string(name: 'REPO', defaultValue: 'petclinic', description: 'Which repo you want to use?')
+        }
 			}
-        	}
-               stage('SonarQube analysis') { 
-                        steps {
-                                withSonarQubeEnv('Sonar') {
-                                        script {
-                                        sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
-                                        '-f pom.xml ' +
-                                        '-Dsonar.projectKey=com.petclinic:all:master ' +
-                                        '-Dsonar.login=admin ' +
-                                        '-Dsonar.password=admin ' +
-                                        '-Dsonar.language=java ' +
-                                        '-Dsonar.sources=. ' +
-                                        '-Dsonar.tests=. ' +
-                                        '-Dsonar.test.inclusions=**/*Test*/** ' +
-                                        '-Dsonar.exclusions=**/*Test*/** '
-                                        }
-                                }
-                                script {
-                                        sleep 30
-                                                timeout(time: 1, unit: 'HOURS') {  
-                                                def qg = waitForQualityGate()
-                                                        if (qg.status != 'OK') {
-                                                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                                                        }
-                                                }
-                                }
-                        }
-                }
-               /* stage("SonarQube Quality Gate") { 
-                        steps {
-                                script {
-                                        timeout(time: 1, unit: 'HOURS') {  
-                                                def qg = waitForQualityGate()
-                                                if (qg.status != 'OK') {
-                                                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                                                }
-                                        }
-                                }
-                        }
-                } */
-        	stage('archival') {
-        		steps {
-            	 		archiveArtifacts 'target/*.?ar'
-            		}
-        	}
-        	stage('unit test') {
-        		steps {
-		            	junit 'target/surefire-reports/*.xml'
-            		}
-        	}
+			steps {
+	        		git "https://github.com/akmaharshi/${REPO}.git"
+    			}
+		}
+    
+    		stage('Build') 	{
+			steps {
+        			sh 'mvn package'
+			}
+    		}
+    		stage('parallel stages') {
+    		parallel {
+    			stage('Archival') {
+				    steps {
+        				archiveArtifacts 'target/*.war'
+				    }
+    			}
+		
+			    stage('Test cases') {
+				    steps {
+        				junit 'target/surefire-reports/*.xml'
+				    }
+    		    }
+		    } }
+    
+  	}
+	post {
+		always {
+			notify('started')
+		}
+		failure {
+			notify('err')
+		}
+		success {
+			notify('success')
+		}
 	}
-	post { 
-        	always { 
-            	notify ('NOTIFY')
-        	}
-        	failure { 
-        		notify ('FAIL')
-        	}
-        	success {
-        		notify ('SUCCESS')
-        	}
-    	}
 }
+
 def notify(status){
     emailext (
-      to: "anil.maharshi@gmail.com",
-      subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-      body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-        <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} 	[${env.BUILD_NUMBER}]</a></p>""",
-    	)
+    to: "devops.kphb@gmail.com",
+    subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+    body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+        <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME}  [${env.BUILD_NUMBER}]</a></p>""",
+    )
  }
