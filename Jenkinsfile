@@ -4,19 +4,6 @@ pipeline {
         maven 'm3' 
     }
 	stages {
-    		stage('checkout') {
-			input {
-      	message "Should we continue?"
-        ok "Yes, we should."
-        parameters {
-        	string(name: 'REPO', defaultValue: 'petclinic', description: 'Which repo you want to use?')
-        }
-			}
-			steps {
-	        		git "https://github.com/akmaharshi/${REPO}.git"
-    			}
-		}
-    
     		stage('Build') 	{
 			steps {
         			sh 'mvn package'
