@@ -10,20 +10,23 @@ pipeline {
 			}
     		}
     		stage('parallel stages') {
-    		parallel {
-    			stage('Archival') {
-				    steps {
-        				archiveArtifacts 'target/*.war'
-				    }
-    			}
+    		        parallel {
+    			        stage('Archival') {
+				        steps {
+        				        archiveArtifacts 'target/*.war'
+				        }
+    			        }
 		
-			    stage('Test cases') {
-				    steps {
-        				junit 'target/surefire-reports/*.xml'
-				    }
-    		    }
-		    } }
-    
+			        stage('Test cases') {
+				        steps {
+        				        junit 'target/surefire-reports/*.xml'
+				        }
+    		                }
+		        } 
+                }
+                stage('Publish') {
+                        nexusPublisher nexusInstanceId: 'Nexus', nexusRepositoryId: 'snapshots', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'target/petclinic.war']], mavenCoordinate: [artifactId: 'spring-petclinic', groupId: 'org.springframework.samples', packaging: 'war', version: '4.2.6-SNAPSHOT']]]
+                }
   	}
 	post {
 		always {
