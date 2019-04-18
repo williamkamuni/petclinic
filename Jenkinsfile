@@ -1,13 +1,24 @@
 pipeline {
-        agent {
-                docker {
-                        image 'maven:3-alpine'
-                        args '-v /root/.m2:/root/.m2'
-                }
-        }
+        agent any //{
+               // docker {
+               //         image 'maven:3-alpine'
+              //          args '-v /root/.m2:/root/.m2'
+              //  }
+       // }
         // tools {
         //         docker 'dockerlatest' 
         // }
+        
+        parameters {
+                string (
+                        defaultValue: '*',
+                        description: '',
+                        name : 'BRANCH_PATTERN')
+                booleanParam (
+                        defaultValue: false,
+                        description: '',
+                        name : 'PUBLISH')
+                }
 	stages {
     		stage('Build') 	{
 			steps {
@@ -28,6 +39,13 @@ pipeline {
 				        }
     		                }
                                 stage('Publish') {
+                                        when {
+                                                expression {
+                                                        //GIT_BRANCH = 'origin/' + sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+                                                        //return GIT_BRANCH == 'origin/master' || params.FORCE_FULL_BUILD
+                                                        params.PUBLISH
+                                                }
+                                        }
                                         input {
                                                 message "Should we publish?"
                                                 ok "Yes, we should."
