@@ -5,9 +5,10 @@ pipeline {
               //          args '-v /root/.m2:/root/.m2'
               //  }
        // }
-        // tools {
-        //         docker 'dockerlatest' 
-        // }
+         tools {
+        //         docker 'dockerlatest'
+                   maven 'M3'
+         }
         
         parameters {
                 string (
