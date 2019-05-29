@@ -6,8 +6,8 @@ pipeline {
                 }
         }
          tools {
-                 docker 'dockerlatest'
-                 //  maven 'M3'
+                 //docker 'dockerlatest'
+                   maven 'M3'
          }
         
         parameters {
