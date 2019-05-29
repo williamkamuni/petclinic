@@ -7,7 +7,7 @@ pipeline {
                     //   registryUrl 'https://hub.docker.com/'
                      //  registryCredentialsId 'docker_hub' 
                      //  }
-        }
+       // }
          tools {
                  //docker 'dockerlatest'
                    maven 'M3'
