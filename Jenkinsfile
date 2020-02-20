@@ -4,11 +4,6 @@ pipeline {
         maven 'M3_HOME' 
     }
 	stages {
-    	stage('Checkout Code') {
-			steps {
-				git 'https://github.com/akmaharshi/petclinic.git'
-			}
-    	}
     	stage('Build') {
 			steps {
 				sh label: '', script: 'mvn clean package -Dmaven.test.skip=true'
