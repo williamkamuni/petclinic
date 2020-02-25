@@ -23,5 +23,10 @@ pipeline {
 				}
 			}
 		}
-       } 
+		stage('Deploy') {
+			steps {
+				sh label: '', script: 'ansible-playbook --ask-vault-pass site.yml -i hosts'
+			}
+    	}
+    } 
 }
