@@ -1,0 +1,8 @@
+trigger:
+- azure
+
+pools:
+vmImage: ubuntu
+
+steps:
+- script: echo my first build
