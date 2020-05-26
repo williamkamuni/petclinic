@@ -2,7 +2,7 @@ trigger:
 - azure
 
 pool:
-  vmImage: ubuntu
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: Maven@3
