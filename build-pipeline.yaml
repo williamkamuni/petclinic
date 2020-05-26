@@ -17,7 +17,7 @@ steps:
       sonar.projectKey=com.petclinic:all:master
       sonar.language=java
       sonar.login=$(SONAR_UN)
-		  sonar.password=$(SONAR_PW)
+      sonar.password=$(SONAR_PW)
       sonar.sources=.
       sonar.tests=.
       sonar.test.inclusions=**/*Test*/**
