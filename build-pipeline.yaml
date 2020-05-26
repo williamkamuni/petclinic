@@ -5,6 +5,25 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'sonarConnect'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'com.petclinic:all:master'
+    cliProjectName: 'petclinic'
+    cliSources: '.'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      # sonar.exclusions=**/*.bin
+      sonar.projectKey=com.petclinic:all:master
+      sonar.language=java
+      sonar.sources=.
+      sonar.tests=.
+      sonar.test.inclusions=**/*Test*/**
+      sonar.exclusions=**/*Test*/**
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -17,14 +36,6 @@ steps:
     mavenAuthenticateFeed: false
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
-
-- task: SonarQubePrepare@4
-  inputs:
-    SonarQube: 'sonarConnect'
-    scannerMode: 'CLI'
-    configMode: 'file'
-
-- task: SonarQubeAnalyze@4
 
 - task: SonarQubePublish@4
   inputs:
