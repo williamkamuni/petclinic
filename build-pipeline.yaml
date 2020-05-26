@@ -31,11 +31,14 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     testRunTitle: 'petclinicTests'
+    codeCoverageToolOption: 'JaCoCo'
+    codeCoverageClassFilter: '**/*Test*/**'
     javaHomeOption: 'JDKVersion'
     mavenVersionOption: 'Default'
     mavenAuthenticateFeed: false
     effectivePomSkip: false
-    sonarQubeRunAnalysis: false
+    sonarQubeRunAnalysis: true
+    sqMavenPluginVersionChoice: 'pom'
 
 - task: SonarQubePublish@4
   inputs:
