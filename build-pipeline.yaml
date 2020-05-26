@@ -5,4 +5,27 @@ pools:
 vmImage: ubuntu
 
 steps:
-- script: echo my first build
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'clean package'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    testRunTitle: 'petclinicTests'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'sonarConnect'
+    scannerMode: 'CLI'
+    configMode: 'file'
+
+- task: SonarQubeAnalyze@4
+
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
