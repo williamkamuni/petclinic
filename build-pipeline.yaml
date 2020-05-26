@@ -5,14 +5,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+
 - task: SonarQubePrepare@4
   inputs:
     SonarQube: 'sonarConnect'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'com.petclinic:all:master'
-    cliProjectName: 'petclinic'
-    cliSources: '.'
+    scannerMode: 'Other'
     extraProperties: |
       # Additional properties that will be passed to the scanner, 
       # Put one key=value per line, example:
@@ -43,3 +40,15 @@ steps:
 - task: SonarQubePublish@4
   inputs:
     pollingTimeoutSec: '300'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**/*.jar'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
