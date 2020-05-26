@@ -1,7 +1,7 @@
 trigger:
 - azure
 
-pools:
+pool:
   vmImage: ubuntu
 
 steps:
