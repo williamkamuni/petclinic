@@ -1,1 +1,2 @@
-This is a test file
+Welcome to Formac
+This session is all about remote repos
