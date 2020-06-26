@@ -4,13 +4,21 @@ pipeline {
 	tools {
 		maven 'M3.6.3'
 	}
+	
+	environment {
+		def tomcatDevIp = '13.72.74.55'
+		def tomcatHome = '/home/sonar/tomcat8'
+		def webApps = tomcatHome+'webapps/'
+        def tomcatStart = "${tomcatHome}/bin/startup.sh"
+        def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
+	}
 
 	stages {
-		/*stage('Checkout') {
+		stage('Checkout') {
 			steps {
 				git url: 'https://github.com/akmaharshi/petclinic.git'
 			}
-		}*/
+		}
 
 		stage('Maven Build') {
 			input {
@@ -45,23 +53,17 @@ pipeline {
 					}
 				}
 				
-	/*stage('Deploy') {
-		steps {
+				stage('Deploy') {
+					steps {
                         scripts {
-                            def tomcatDevIp = '13.72.74.55'
-                            def tomcatHome = '/home/sonar/tomcat8'
-                            def webApps = tomcatHome+'webapps/'
-                            def tomcatStart = "${tomcatHome}/bin/startup.sh"
-                            def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
-	                        
                             sshagent (credentials: ['agent1']) {
                                 sh "scp -o StrictHostKeyChecking=no target/petclinic.war sonar@${tomcatDevIp}:${webApps}myweb.war"
                                 sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
                                 sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
                             }
-			}
-		}
-	}*/
+					    }
+					}
+				}
 			}
 		}
 	}
