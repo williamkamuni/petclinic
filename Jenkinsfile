@@ -8,7 +8,6 @@ pipeline {
 	environment {
 		def tomcatDevIp = '13.72.74.55'
 		def tomcatHome = '/home/sonar/tomcat8'
-		def webApps = tomcatHome+'webapps/'
         def tomcatStart = "${tomcatHome}/bin/startup.sh"
         def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
 	}
@@ -57,7 +56,7 @@ pipeline {
 					steps {
                         scripts {
                             sshagent (credentials: ['agent1']) {
-                                sh "scp -o StrictHostKeyChecking=no target/petclinic.war sonar@${tomcatDevIp}:${webApps}myweb.war"
+                                sh "scp -o StrictHostKeyChecking=no target/petclinic.war sonar@${tomcatDevIp}:/home/sonar/tomcat8/webapps/myweb.war"
                                 sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
                                 sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
                             }
