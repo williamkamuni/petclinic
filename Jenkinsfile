@@ -54,14 +54,10 @@ pipeline {
 				
 				stage('Deploy') {
 					steps {
-                        scripts {
-                            sshagent (credentials: ['agent1']) {
-                                sh "scp -o StrictHostKeyChecking=no target/petclinic.war sonar@${tomcatDevIp}:/home/sonar/tomcat8/webapps/myweb.war"
-                                sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
-                                sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
-                            }
-					    }
-					}
+                                		sh "scp -o StrictHostKeyChecking=no target/petclinic.war sonar@${tomcatDevIp}:/home/sonar/tomcat8/webapps/myweb.war"
+                                		sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
+                                		sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
+                            		}
 				}
 			}
 		}
