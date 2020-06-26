@@ -45,8 +45,8 @@ pipeline {
 					}
 				}
 				
-				stage('Deploy') {
-					steps {
+	/*stage('Deploy') {
+		steps {
                         scripts {
                             def tomcatDevIp = '13.72.74.55'
                             def tomcatHome = '/home/sonar/tomcat8'
@@ -59,9 +59,9 @@ pipeline {
                                 sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
                                 sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
                             }
-					    }
-					}
-				}
+			}
+		}
+	}*/
 			}
 		}
 	}
