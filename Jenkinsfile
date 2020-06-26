@@ -6,11 +6,11 @@ pipeline {
 	}
 
 	stages {
-		stage('Checkout') {
+		/*stage('Checkout') {
 			steps {
 				git url: 'https://github.com/akmaharshi/petclinic.git'
 			}
-		}
+		}*/
 
 		stage('Maven Build') {
 			input {
