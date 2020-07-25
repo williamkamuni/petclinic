@@ -22,6 +22,7 @@ steps:
       sonar.tests=.
       sonar.test.inclusions=**/*Test*/**
       sonar.exclusions=**/*Test*/**
+      sonar.branch.name=azure
 
 - task: Maven@3
   inputs:
