@@ -2,4 +2,5 @@
 FROM tomcat:8.0
 MAINTAINER Anil Pemmaraju
 # COPY path-to-your-application-war path-to-webapps-in-docker-tomcat
+COPY test.txt /usr/local/tomcat/
 COPY target/petclinic.war /usr/local/tomcat/webapps/
