@@ -9,6 +9,10 @@ pipeline {
 		stage('Checkout') {
 			steps {
 				git url: 'https://github.com/Saitejashwini/ansible-tomcat.git'
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
+				doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'ansible-tomcat']], 
+				submoduleCfg: [], 
+				userRemoteConfigs: [[credentialsId: 'myId', url: 'https://github.com/Saitejashwini/ansible-tomcat.git']]])
 			}
 		}
 		stage('Build and Provisioning') {
