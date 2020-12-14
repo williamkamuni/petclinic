@@ -25,7 +25,7 @@ pipeline {
 				stage('Run Terraform') {
 					steps {
 						sh '''
-						 	cd terraform
+						 	cd ansible-tomcat/terraform
 							export PATH=$PATH:/usr/local/bin
 							terraform init
 							terraform apply --auto-approve
@@ -73,7 +73,7 @@ pipeline {
 		}
 		stage('Install Tomcat and Deploy war') {
 			steps {
-				sh 'ansible-playbook -i aws_ec2.yml site.yml -e "ansible_user=ec2-user passed_in_hosts=tag_my_app_asg"'
+				sh 'cd ansible-tomcat;ansible-playbook -i aws_ec2.yml site.yml -e "ansible_user=ec2-user passed_in_hosts=tag_my_app_asg"'
 			}
 		}
 	}
