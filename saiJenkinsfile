@@ -55,13 +55,13 @@ pipeline {
     							nexusUrl: '3.16.24.163:8081/nexus',
     							groupId: 'org.springframework.samples',
     							version: "4.2.${BUILD_NUMBER}",
-    							repository: 'maven-releases',
+    							repository: 'releases',
     							credentialsId: 'nexuscred',
     							artifacts: [
-        							[artifactId: spring-petclinic,
+        							[artifactId: 'spring-petclinic',
          							classifier: '',
          							file: 'target/petclinic.war',
-         							type: 'jar']
+         							type: 'war']
     							]
  						)
 					}
