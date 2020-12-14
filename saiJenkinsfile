@@ -52,7 +52,7 @@ pipeline {
 						nexusArtifactUploader (
     							nexusVersion: 'nexus2',
     							protocol: 'http',
-    							nexusUrl: '3.16.24.163',
+    							nexusUrl: '3.16.24.163:8081/nexus',
     							groupId: 'org.springframework.samples',
     							version: "4.2.${BUILD_NUMBER}",
     							repository: 'maven-releases',
