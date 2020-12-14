@@ -22,6 +22,7 @@ pipeline {
 					steps {
 						sh '''
 						 	cd terraform
+							export PATH=$PATH:/usr/local/
 							terraform init
 							terraform apply --auto-approve
 						'''
