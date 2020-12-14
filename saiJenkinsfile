@@ -8,11 +8,11 @@ pipeline {
 	stages {
 		stage('Checkout') {
 			steps {
-				git url: 'https://github.com/Saitejashwini/ansible-tomcat.git'
+				//git url: 'https://github.com/Saitejashwini/ansible-tomcat.git'
 				checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
-				doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'ansible-tomcat']], 
+				doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'ansible-terraform']], 
 				submoduleCfg: [], 
-				userRemoteConfigs: [[credentialsId: 'myId', url: 'https://github.com/Saitejashwini/ansible-tomcat.git']]])
+				userRemoteConfigs: [[credentialsId: 'myId', url: 'https://github.com/akmaharshi/ansible-terraform.git']]])
 			}
 		}
 		stage('Build and Provisioning') {
@@ -25,7 +25,7 @@ pipeline {
 				stage('Run Terraform') {
 					steps {
 						sh '''
-						 	cd ansible-tomcat/terraform
+						 	cd ansible-terraform/terraform
 							export PATH=$PATH:/usr/local/bin
 							terraform init
 							terraform apply --auto-approve
@@ -73,7 +73,7 @@ pipeline {
 		}
 		stage('Install Tomcat and Deploy war') {
 			steps {
-				sh 'cd ansible-tomcat;ansible-playbook -i aws_ec2.yml site.yml -e "ansible_user=ec2-user passed_in_hosts=tag_my_app_asg"'
+				sh 'cd ansible-terraform;ansible-playbook -i aws_ec2.yml site.yml -e "ansible_user=ec2-user passed_in_hosts=tag_my_app_asg ARTIFACT_VERSION=81f8102d-c371-4991-bf51-669d3e2d903b"'
 			}
 		}
 	}
