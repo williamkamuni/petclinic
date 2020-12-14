@@ -8,8 +8,8 @@ pipeline {
 	environment {
 		def tomcatDevIp = '13.72.74.55'
 		def tomcatHome = '/home/sonar/tomcat8'
-        def tomcatStart = "${tomcatHome}/bin/startup.sh"
-        def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
+        	def tomcatStart = "${tomcatHome}/bin/startup.sh"
+        	def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
 	}
 
 	stages {
@@ -48,12 +48,27 @@ pipeline {
 				
 				stage('Nexus Uploader') {
 					steps {
-						nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexuscred', groupId: 'org.springframework.samples', nexusUrl: '3.16.24.163', nexusVersion: 'nexus2', protocol: 'http', repository: 'maven-releases', version: "4.2.${BUILD_NUMBER}"
+						// nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexuscred', groupId: 'org.springframework.samples', nexusUrl: '3.16.24.163', nexusVersion: 'nexus2', protocol: 'http', repository: 'maven-releases', version: "4.2.${BUILD_NUMBER}"
+						nexusArtifactUploader (
+    							nexusVersion: 'nexus2',
+    							protocol: 'http',
+    							nexusUrl: '3.16.24.163',
+    							groupId: 'org.springframework.samples',
+    							version: "4.2.${BUILD_NUMBER}",
+    							repository: 'maven-releases',
+    							credentialsId: 'nexuscred',
+    							artifacts: [
+        							[artifactId: spring-petclinic,
+         							classifier: '',
+         							file: 'target/petclinic.war',
+         							type: 'jar']
+    							]
+ 						)
 					}
 				}
+			}
 		}
 	}
-}
 	post {
 		success {
 			notify('Success')
