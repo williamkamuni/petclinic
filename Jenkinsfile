@@ -4,11 +4,6 @@ pipeline {
 		maven 'M3.6'
 	}
 	stages {
-		stage('Checkout') {
-			steps {
-    			git 'https://github.com/akmaharshi/petclinic.git'
-    		}
-    	}
     	stage('My Parallel stages') {
     		parallel {
     			stage('SonarQube analysis') { 
