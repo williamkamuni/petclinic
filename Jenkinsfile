@@ -1,68 +1,65 @@
 pipeline {
-	agent { label 'master' }
-
+	agent any
 	tools {
-		maven 'M3.6.3'
+		maven 'M3.6'
 	}
-	
-	environment {
-		def tomcatDevIp = '13.72.74.55'
-		def tomcatHome = '/home/sonar/tomcat8'
-        def tomcatStart = "${tomcatHome}/bin/startup.sh"
-        def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
-	}
-
 	stages {
 		stage('Checkout') {
 			steps {
-				git url: 'https://github.com/akmaharshi/petclinic.git'
+    			git 'https://github.com/akmaharshi/petclinic.git'
+    		}
+    	}
+    	stage('My Parallel stages') {
+    		parallel {
+    			stage('SonarQube analysis') { 
+    				steps {
+						withSonarQubeEnv('Sonar') { 
+						sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
+						'-Dsonar.projectKey=com.petclinic:all:master ' +
+						'-Dsonar.language=java ' +
+						'-Dsonar.sources=. ' +
+						'-Dsonar.tests=. ' +
+						'-Dsonar.test.inclusions=**/*Test*/** ' +
+						'-Dsonar.exclusions=**/*Test*/**'
+						}
+					}
+				}
+				stage('Build') {
+					steps {
+    					sh 'mvn clean package'
+    				}
+				}
 			}
 		}
 
-		stage('Maven Build') {
-			input {
-                message "Should we continue?"
-                ok "Yes, Proceed"
-                parameters {
-                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-                }
-            }
+		stage('Check Quality gates') {
 			steps {
-				echo "Hello, ${PERSON}, nice to meet you."
-				sh label: '', script: 'mvn clean package'
+				script {
+					timeout(time: 1, unit: 'HOURS') {
+					sleep 30
+					def qg = waitForQualityGate() 
+						if (qg.status != 'OK') {
+							error "Pipeline aborted due to quality gate failure: ${qg.status}"
+						}
+					}
+				}
 			}
 		}
 		stage('Post Build Actions') {
-			parallel {
-				stage('Archive Artifacts') {
+    		parallel {
+				stage('Archive') {
 					steps {
 						archiveArtifacts artifacts: 'target/*.?ar', followSymlinks: false
-					}
+					}	
 				}
-
-				stage('Test Results') {
+				stage('Unit tests') {
 					steps {
 						junit 'target/surefire-reports/*.xml'
 					}
 				}
-				
-				stage('Nexus Uploader') {
-					steps {
-						nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexuscred', groupId: 'org.springframework.samples', nexusUrl: '23.96.98.151:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-releases', version: "4.2.${BUILD_NUMBER}"
-					}
-				}
-				
-				stage('Deploy') {
-					steps {
-                                		sh "scp -o StrictHostKeyChecking=no target/petclinic.war sonar@${tomcatDevIp}:/home/sonar/tomcat8/webapps/myweb.war"
-                                		sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
-                                		sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
-                            		}
-				}
 			}
 		}
 	}
-
 	post {
 		success {
 			notify('Success')
@@ -74,14 +71,12 @@ pipeline {
 			notify('Aborted')
 		}
 	}
-
 }
 
-def notify(status){
-    emailext (
-      to: "anilmaharshi.p@gmail.com",
-      subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-      body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-        <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
-    )
+def notify(status) {
+	emailext (
+		to: 'DEVOPS.KPHB@GMAIL.COM',
+		subject: "JOB:${env.JOB_NAME} with Build: ${env.BUILD_ID} ${status}", 
+		body: "${status} - ${env.BUILD_URL}"
+	)
 }
