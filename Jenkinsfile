@@ -52,7 +52,8 @@ pipeline {
 				}
 				stage('Artifact Uploader') {
 					steps {
-						nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusID', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: '4.2'
+						// nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusID', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: '4.2'
+					nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusID', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: '4.2'
 					}
 				}
 			}
