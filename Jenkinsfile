@@ -4,8 +4,8 @@ pipeline {
 		maven 'M3.6'
 	}
 	stages {
-    	stage('My Parallel stages') {
-    		parallel {
+    	// stage('My Parallel stages') {
+    	//	parallel {
     			/* stage('SonarQube analysis') { 
     				steps {
 						withSonarQubeEnv('Sonar') { 
@@ -22,8 +22,8 @@ pipeline {
     					sh 'mvn clean package'
     				}
 				}
-			}
-		}
+			//}
+		//}
 
 		/* stage('Check Quality gates') {
 			steps {
@@ -48,6 +48,11 @@ pipeline {
 				stage('Unit tests') {
 					steps {
 						junit 'target/surefire-reports/*.xml'
+					}
+				}
+				stage('Artifact Uploader') {
+					steps {
+						nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusID', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'snapshots', version: '4.2.6-SNAPSHOT'
 					}
 				}
 			}
