@@ -6,7 +6,7 @@ pipeline {
 	stages {
     	stage('My Parallel stages') {
     		parallel {
-    			stage('SonarQube analysis') { 
+    			/* stage('SonarQube analysis') { 
     				steps {
 						withSonarQubeEnv('Sonar') { 
 						sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
@@ -18,7 +18,7 @@ pipeline {
 						'-Dsonar.exclusions=**/*Test*/**'
 						}
 					}
-				}
+				} */
 				stage('Build') {
 					steps {
     					sh 'mvn clean package'
@@ -27,7 +27,7 @@ pipeline {
 			}
 		}
 
-		stage('Check Quality gates') {
+		/* stage('Check Quality gates') {
 			steps {
 				script {
 					timeout(time: 1, unit: 'HOURS') {
@@ -39,7 +39,7 @@ pipeline {
 					}
 				}
 			}
-		}
+		} */
 		stage('Post Build Actions') {
     		parallel {
 				stage('Archive') {
@@ -70,7 +70,7 @@ pipeline {
 
 def notify(status) {
 	emailext (
-		to: 'DEVOPS.KPHB@GMAIL.COM',
+		to: 'devops.kphb@gmail.com',
 		subject: "JOB:${env.JOB_NAME} with Build: ${env.BUILD_ID} ${status}", 
 		body: "${status} - ${env.BUILD_URL}"
 	)
