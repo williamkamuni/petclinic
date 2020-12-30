@@ -67,7 +67,7 @@ pipeline {
 			steps {
 				script {
 					sshagent (credentials: ['tomcat']) {
-						sh "scp -o StrictHostKeyChecking=no target/petclinic.war tomcat@${tomcatDevIp}:${tomcatHome}/webapps/petclinic.war"
+						sh "scp -o StrictHostKeyChecking=no target/petclinic.war ec2-user@${tomcatDevIp}:${tomcatHome}/webapps/petclinic.war"
                 				sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
                 				sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
             				}
