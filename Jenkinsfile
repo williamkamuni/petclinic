@@ -3,6 +3,12 @@ pipeline {
 	tools {
 		maven 'M3.6'
 	}
+	environment {
+		def tomcatDevIp = '18.191.125.122'
+		def tomcatHome = '/home/tomcat/apache-tomcat-8.5.61'
+        	def tomcatStart = "${tomcatHome}/bin/startup.sh"
+        	def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
+	}
 	stages {
     	// stage('My Parallel stages') {
     	//	parallel {
@@ -55,6 +61,17 @@ pipeline {
 						nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusid', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'snapshots', version: '4.2.6-SNAPSHOT'
 					}
 				}
+			}
+		}
+		stage('Deploy') {
+			steps {
+				script {
+					sshagent (credentials: ['tomcat']) {
+						sh "scp -o StrictHostKeyChecking=no target/petclinic.war tomcat@${tomcatDevIp}:${tomcatHome}/webapps/petclinic.war"
+                				sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
+                				sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
+            				}
+            			}
 			}
 		}
 	}
