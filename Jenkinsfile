@@ -1,5 +1,5 @@
 pipeline {
-	agent { label 'master' }
+	agent { label 'tomcat' }
 	tools {
 		maven 'M3.6'
 	}
@@ -66,11 +66,17 @@ pipeline {
 		stage('Deploy') {
 			steps {
 				script {
-					sshagent (credentials: ['tomcat']) {
-						sh "scp -o StrictHostKeyChecking=no target/petclinic.war ec2-user@${tomcatDevIp}:${tomcatHome}/webapps/petclinic.war"
-                				sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
-                				sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
-            				}
+					//sshagent (credentials: ['tomcat']) {
+					//	sh "scp -o StrictHostKeyChecking=no target/petclinic.war ec2-user@${tomcatDevIp}:${tomcatHome}/webapps/petclinic.war"
+                			//	sh "ssh sonar@${tomcatDevIp} ${tomcatStop}"
+                			//	sh "ssh sonar@${tomcatDevIp} ${tomcatStart}"
+					
+				sh '''
+				cp -r target/petclinic.war ${tomcatHome}/webapps/petclinic.war
+				${tomcatStop}
+				${tomcatStart}
+				'''
+            				//}
             			}
 			}
 		}
