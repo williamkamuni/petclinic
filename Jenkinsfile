@@ -5,7 +5,7 @@ pipeline {
 	}
 	environment {
 		def tomcatDevIp = '18.191.125.122'
-		def tomcatHome = '/home/tomcat/apache-tomcat-8.5.61'
+		def tomcatHome = '/home/ec2-user/apache-tomcat-8.5.61'
         	def tomcatStart = "${tomcatHome}/bin/startup.sh"
         	def tomcatStop = "${tomcatHome}/bin/shutdown.sh"
 	}
