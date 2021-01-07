@@ -71,7 +71,7 @@ pipeline {
 				withCredentials([file(credentialsId: 'mypass', variable: 'FILE')]) {
 					dir('subdir') {
 						sh '''
-						sudo ansible-playbook -i ansible/production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${FILE} ansible/site.yml 
+						sudo ansible-playbook -i ansible/production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${FILE} ../ansible/site.yml 
 						'''
 					}
 				}
