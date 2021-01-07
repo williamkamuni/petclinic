@@ -68,11 +68,12 @@ pipeline {
 				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, 
                                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'ansible']], submoduleCfg: [], 
         				userRemoteConfigs: [[url: 'https://github.com/akmaharshi/tomcat-standalone.git']]])
-
-				sh '''
-				cd ansible;
-				sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${mypass} site.yml 
-				'''
+				withCredentials([file(credentialsId: 'mypass', variable: 'FILE')]) {
+					sh '''
+						cd ansible;
+						sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${FILE} site.yml 
+					'''
+				}
 			}
 		}
 	}
