@@ -70,11 +70,8 @@ pipeline {
         				userRemoteConfigs: [[url: 'https://github.com/akmaharshi/tomcat-standalone.git']]])
 
 				sh '''
-				sudo su;
 				cd ansible;
-				pwd;
-				whoami;
-				sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" site.yml -vvv
+				sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${mypass} site.yml 
 				'''
 			}
 		}
