@@ -53,7 +53,7 @@ pipeline {
 				stage('Artifact Uploader') {
 					steps {
 						// nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusID', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: '4.2'
-					nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusid', groupId: 'org.springframework.samples', nexusUrl: '18.188.206.92:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: "4.2.${BUILD_NUMBER}"
+					nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/petclinic.war', type: 'war']], credentialsId: 'nexusid', groupId: 'org.springframework.samples', nexusUrl: '3.17.60.125:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: "4.2.${BUILD_NUMBER}"
 					}
 				}
 			}
@@ -67,7 +67,7 @@ pipeline {
 
 				sh '''
 				cd ansible
-				ansible-playbook -i production site.yml
+				ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}"
 				'''
 			}
 		}
