@@ -74,6 +74,7 @@ pipeline {
 						echo $MYPASS
 						echo $MYPASS > ~/.vault_pass.txt
 						export ANSIBLE_VAULT_PASSWORD_FILE=~/.vault_pass.txt
+						cd ansible
 						sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ~/.vault_pass.txt site.yml 
 					'''
 				}
