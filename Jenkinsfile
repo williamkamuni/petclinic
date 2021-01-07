@@ -69,10 +69,12 @@ pipeline {
                                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'ansible']], submoduleCfg: [], 
         				userRemoteConfigs: [[url: 'https://github.com/akmaharshi/tomcat-standalone.git']]])
 				withCredentials([file(credentialsId: 'mypass', variable: 'FILE')]) {
-					sh '''
-						cd ansible;
-						sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${FILE} site.yml 
-					'''
+					sh 'cd ansible'
+					dir('subdir') {
+						sh '''
+							sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${FILE} site.yml 
+						'''
+					}
 				}
 			}
 		}
