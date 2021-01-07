@@ -68,10 +68,13 @@ pipeline {
 				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, 
                                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'ansible']], submoduleCfg: [], 
         				userRemoteConfigs: [[url: 'https://github.com/akmaharshi/tomcat-standalone.git']]])
-				ws {
-					withCredentials([file(credentialsId: 'mypass', variable: 'FILE')]) {
+				
+					withCredentials([string(credentialsId: 'ansi_vault_pass', variable: 'MYPASS')]) {
 						sh '''
-							sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ${FILE} site.yml 
+							echo $MYPASS
+							echo $MYPASS > ~/.vault_pass.txt
+							export ANSIBLE_VAULT_PASSWORD_FILE=~/.vault_pass.txt
+							sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" --vault-id ~/.vault_pass.txt site.yml 
 						'''
 					}
 				}
