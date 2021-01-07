@@ -59,6 +59,10 @@ pipeline {
 			}
 		}
 		stage('Deploy') {
+			input {
+                		message "Should we continue?"
+                		ok "Yes, we should."
+            		}
 			steps {
 				// git 'https://github.com/akmaharshi/tomcat-standalone.git'
 				checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, 
@@ -70,7 +74,7 @@ pipeline {
 				cd ansible;
 				pwd;
 				whoami;
-				ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" site.yml
+				sudo ansible-playbook -i production -e "BUILD_NO=${BUILD_NUMBER}" site.yml
 				'''
 			}
 		}
