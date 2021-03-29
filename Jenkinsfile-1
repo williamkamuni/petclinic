@@ -4,29 +4,29 @@ pipeline {
 	    maven 'M3.6'
 	}
 	stages { 
-        stage('Build'){
-	        steps {
+        	stage('Build'){
+	        	steps {
                 
-                sh 'mvn clean package'
+                		sh 'mvn clean package'
 		       }
-        }
-        stage('Archival'){
-          steps {
-                archiveArtifacts artifacts: 'target/*.?ar', followSymlinks: false
-		      }
-        }
-        stage('Unit Tests'){
-	        steps {
-                junit 'target/surefire-reports/*.xml' 
-		      }
-        }
+        	}
+        	stage('Archival'){
+          		steps {
+                		archiveArtifacts artifacts: 'target/*.?ar', followSymlinks: false
+		     	}
+        	}
+        	stage('Unit Tests'){
+	        	steps {
+               		 	junit 'target/surefire-reports/*.xml' 
+		      	}
+        	}
 	}
     
 }
 
 def notify(status) {
-    emaillext(
-	    to: 'williamkamuni@gmail.com',
+    	emaillext(
+		to: 'williamkamuni@gmail.com',
 		subject:"${status} - ${env.JOB_NAME}",
 		body:"$status - jenkins job ${env.BUILD_URL}"
 	)
